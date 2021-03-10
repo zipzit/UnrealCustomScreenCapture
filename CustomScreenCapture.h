@@ -1,4 +1,7 @@
- // ref: https://forums.unrealengine.com/development-discussion/c-gameplay-programming/1627098-get-image-from-scenecapture2d
+
+
+    // Fill out your copyright notice in the Description page of Project Settings.
+    // ref: https://forums.unrealengine.com/development-discussion/c-gameplay-programming/1627098-get-image-from-scenecapture2d
 
 #pragma once
 
@@ -25,7 +28,6 @@ protected:
 
     // Create the image in texture
     void FillTexture();
-    void TheHugeManateeTickGetData();
 
     // Textures need to be power of 2
     // Texture has to be a square
@@ -33,7 +35,7 @@ protected:
 
     UTextureRenderTarget2D* renderTarget;
     class USceneCaptureComponent2D* sceneCapture;
-    class UCameraComponent* OurCamera;
+    class UCameraComponent* ourCamera;
     uint32_t tickCount;
 
 public:
