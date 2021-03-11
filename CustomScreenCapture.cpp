@@ -22,7 +22,6 @@ inline const uint32_t SmallestPowerOf2_GE_N(uint32_t N)
     return N;
 }
 
-
 // Sets default values
 ACustomScreenCapture::ACustomScreenCapture()
     : resolutionX(1024)
@@ -40,36 +39,24 @@ void ACustomScreenCapture::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Resolution has to be a power of 2. This code finds the lowest RxR resolution 
-    // which has equal or more pixels than requested.
+    // Resolution has to be a power of 2. 
+    // Finds the lowest RxR resolution of equal size or larger.
     uint32_t higher = std::max(resolutionX, resolutionY);
-
-    /* higher--;
-     higher |= higher >> 1;
-     higher |= higher >> 2;
-     higher |= higher >> 4;
-     higher |= higher >> 8;
-     higher |= higher >> 16;
-     higher++;*/
-
-     //internResolution = higher;
     internResolution = SmallestPowerOf2_GE_N(higher);
-
     printFString("internResolution is: %d", internResolution, 5.f);
 
     ourCamera->FieldOfView = field_of_view;
     renderTarget = NewObject<UTextureRenderTarget2D>();
-    renderTarget->InitCustomFormat(internResolution, internResolution, EPixelFormat::PF_B8G8R8A8, true);  // true
-    //  PF_B8G8R8A8   PF_FloatRGB      PF_G8=exception thrown  PF_G16=Exception Thrown    PF_Unknown=Exception Thrown
+    renderTarget->InitCustomFormat(internResolution, internResolution, EPixelFormat::PF_B8G8R8A8, true);  // some testing with EPixelFormat::PF_FloatRGBA, true
     renderTarget->UpdateResourceImmediate();
 
     sceneCapture = NewObject<USceneCaptureComponent2D>();
-    sceneCapture->CaptureSource = SCS_FinalColorLDR;     // what does this line do?
-
+    sceneCapture->CaptureSource = SCS_FinalColorLDR;     // SCS_FinalColorLDR allows for post processing on the image.  default = SCS_SceneColorHDR
     sceneCapture->TextureTarget = renderTarget;
     sceneCapture->SetupAttachment(ourCamera);
     sceneCapture->bCaptureEveryFrame = true;
-
+    sceneCapture->bAlwaysPersistRenderingState = true;  // test this line?
+    sceneCapture->UpdateDrawFrustum();  // test this line?
     tickCount = 0;
 }
 
@@ -77,7 +64,6 @@ void ACustomScreenCapture::BeginPlay()
 void ACustomScreenCapture::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
     tickCount++;
     //if (tickCount == 10) { ...  }    //Wait for tenth tic...
     FillTexture();
@@ -86,26 +72,22 @@ void ACustomScreenCapture::Tick(float DeltaTime)
 
 void ACustomScreenCapture::FillTexture()
 {
-    // this if loop fails.  What happens is after a few frames, renderTarget exists, but has no/odd content. 
-    // and RenderTargetResource ends up as null. 
-    //if (renderTarget == nullptr) { ...}
-    renderTarget = NewObject<UTextureRenderTarget2D>();
-    renderTarget->InitCustomFormat(internResolution, internResolution, EPixelFormat::PF_B8G8R8A8, true);   // true bInForceLinearGamma
-    renderTarget->UpdateResourceImmediate();  // what does this line do?
-
+    if (renderTarget == nullptr) {
+        renderTarget = NewObject<UTextureRenderTarget2D>();
+        renderTarget->InitCustomFormat(internResolution, internResolution, EPixelFormat::PF_FloatRGBA, false);   //PF_B8G8R8A8   true bInForceLinearGamma
+        renderTarget->UpdateResourceImmediate();  // what does this line do?
+    }
     sceneCapture->TextureTarget = renderTarget;
-
     //sceneCapture->CaptureScene();   // This line generates a warning:  Scene Capture with bCaptureEveryFrame enabled --> major inefficiency... 
     //sceneCapture->UpdateContent();  // This should not be used if bCaptureEveryFrame is enabled, or the scene capture will render redundantly. 
 
-    auto RenderTargetResource = renderTarget->GameThread_GetRenderTargetResource();
+    auto RenderTargetResource = renderTarget->GameThread_GetRenderTargetResource();  // type FRenderTarget*
 
     if (RenderTargetResource) {
         TArray<FColor> buffer;
         RenderTargetResource->ReadPixels(buffer);
 
-        printFString("tickCount: %d", tickCount, 0.05f);
-        //printFString("Buffer Size: %d", buffer.Num(), 1.0f);
+        printFString("if (RenderTargetResource) tickCount: %d", tickCount, 0.05f);
 
         // process data with OpenCV
         /*cv::Mat wrappedImage(RenderTarget->GetSurfaceHeight(), RenderTarget->GetSurfaceWidth(), CV_8UC4,
