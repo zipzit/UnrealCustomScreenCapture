@@ -6,15 +6,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Actor.h"
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/SceneCaptureComponent2D.h"
 #include "Engine/Classes/Engine/TextureRenderTarget2D.h"
 #include "CustomScreenCapture.generated.h"
 
-    UCLASS()
-class BP_3RDPERSON_MEOW_API ACustomScreenCapture : public AActor
+UCLASS()
+class BP_TOPDOWN_W_MEOWCAM_API ACustomScreenCapture : public AActor
 {
     GENERATED_BODY()
 
@@ -50,4 +49,3 @@ public:
     UPROPERTY(EditAnywhere, Category = "Output Information", meta = (ClampMin = "20.0", ClampMax = "179.9", UIMin = "20.0", UIMax = "179.9"))
         float field_of_view;
 };
-
