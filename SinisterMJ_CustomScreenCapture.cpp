@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+// This is the final product by SinisterMJ, which was the inspiration for my work.  Many thanks...
 #include "CustomScreenCapture.h"
 #include "RTW_WorldSettings.h"
 #include "nlohmann/json.hpp"
