@@ -1,7 +1,4 @@
-
-
-    // Fill out your copyright notice in the Description page of Project Settings.
-    // ref: https://forums.unrealengine.com/development-discussion/c-gameplay-programming/1627098-get-image-from-scenecapture2d
+// ref: https://forums.unrealengine.com/development-discussion/c-gameplay-programming/1627098-get-image-from-scenecapture2d
 
 #pragma once
 
@@ -10,6 +7,7 @@
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/SceneCaptureComponent2D.h"
 #include "Engine/Classes/Engine/TextureRenderTarget2D.h"
+#include <string>
 #include "CustomScreenCapture.generated.h"
 
 UCLASS()
@@ -36,6 +34,8 @@ protected:
     class USceneCaptureComponent2D* sceneCapture;
     class UCameraComponent* ourCamera;
     uint32_t tickCount;
+    std::string baseFilename;
+    std::string basePathFolder;
 
 public:
     // Called every frame
@@ -48,4 +48,8 @@ public:
 
     UPROPERTY(EditAnywhere, Category = "Output Information", meta = (ClampMin = "20.0", ClampMax = "179.9", UIMin = "20.0", UIMax = "179.9"))
         float field_of_view;
+
+    UPROPERTY(EditAnywhere, Category = "Output Information")
+        FString outputFolderPath;
+
 };
