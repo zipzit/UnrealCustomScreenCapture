@@ -1,6 +1,8 @@
 # UnrealCustomScreenCapture
 Unreal Game Engine -- Custom Scene Capture 2D (export video feed out of game engine...)
 
+![Initial Screen Capture](./test.jpg)
+
 ## Understand how 2D Screen Capture works in game
 Let's add a static camera to blueprint game, then broadcast
 its output to a simple box... think security camera broadcasting to a large screen tv inside of the game...
