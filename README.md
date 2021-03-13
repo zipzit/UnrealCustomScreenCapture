@@ -1,6 +1,7 @@
 # UnrealCustomScreenCapture
 Unreal Game Engine -- Custom Scene Capture 2D (export video feed out of game engine...)
 
+## Initial results...
 ![Initial Screen Capture](./test.jpg)
 
 ## Understand how 2D Screen Capture works in game
@@ -22,3 +23,6 @@ Again, that is 1) SceneCapture2d 2) TextureRenderTarget2d 3) Material 4) Mesh cu
 ## But where are we really going?
 Now I want to do this with a C++ class, the intent is to grab each video frame and 
 process it with OpenCV...
+
+The image display above was saved to simple binary file on disk, then opened up via OpenCV as `cv::Mat img(1024, 1024, CV_8UC4, rawDataBuffer)` and saved as .jpg from OpenCV.
+
