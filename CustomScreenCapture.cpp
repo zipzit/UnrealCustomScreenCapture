@@ -1,3 +1,4 @@
+
 #include "CustomScreenCapture.h"
 #include <algorithm>    // max()
 #include <fstream>
